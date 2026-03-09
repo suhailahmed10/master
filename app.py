@@ -1,21 +1,23 @@
 import streamlit as st
 import pandas as pd
 
-st.set_page_config(page_title="F1 2026 Australian GP Predictions", layout="wide")
+st.title("🏎️ 2026 Australian GP - Predicted Podium")
 
-st.title("🏎️ 2026 Australian GP - Predicted Race Results")
-
-# Load the latest CSV
-# Replace this URL with your CSV location on GitHub or Google Drive
+# Load CSV from GitHub raw URL (replace with your URL)
 csv_url = "https://raw.githubusercontent.com/suhailahmed10/master/main/predicted_race_results.csv"
 df_pred = pd.read_csv(csv_url)
 
-# Top-3 Podium
+# Get top 3 predicted drivers
 top3 = df_pred.sort_values("PredictedRacePos").head(3).reset_index(drop=True)
 top3["Medal"] = ["🥇","🥈","🥉"]
-st.subheader("🏆 Predicted Podium")
-st.table(top3[["Medal","Driver","Constructor","PredictedRacePos"]])
 
-# Full Race Table
+# Columns to display (exclude index & PredictedRacePos)
+st.table(top3[["Medal","Driver","Constructor"]])
+
 st.subheader("📋 Full Race Results")
-st.dataframe(df_pred.sort_values("PredictedRacePos"))
+
+# Select columns to show
+full_table = df_pred[["Driver","Constructor","QualRank","QualTime","GapToPole","Grid"]]
+
+# Display table
+st.dataframe(full_table)
