@@ -13,10 +13,12 @@ top3["Medal"] = ["🥇","🥈","🥉"]
 
 # Columns to display (exclude index & PredictedRacePos)
 st.table(top3[["Medal","Driver","Constructor"]])
+st.table(top3.style.hide_index())
 st.subheader("📋 Full Race Results")
 
 # Select columns to show
 full_table = df_pred[["Driver","Constructor","QualRank","QualTime","GapToPole","Grid"]]
 
 
-st.dataframe(full_table.style.background_gradient(cmap='viridis'))
+# Display table
+st.dataframe(full_table)
