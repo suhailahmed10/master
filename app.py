@@ -1,17 +1,27 @@
 import streamlit as st
 import pandas as pd
 
-# Set page layout
-st.set_page_config(page_title="F1 2026 Australian GP Predictions", layout="wide")
+# -------------------------
+# Streamlit page config
+# -------------------------
+st.set_page_config(
+    page_title="F1 2026 Australian GP Predictions",
+    layout="wide"
+)
 
-# Title
 st.title("🏎️ 2026 Australian GP - Predicted Race Results")
 
-# CSV URL
+# -------------------------
+# Load CSV from GitHub
+# -------------------------
 csv_url = "https://raw.githubusercontent.com/suhailahmed10/master/main/predicted_race_results.csv"
 
-# Load CSV
-df_pred = pd.read_csv(csv_url)
+try:
+    df_pred = pd.read_csv(csv_url)
+    st.success("CSV loaded successfully!")
+except Exception as e:
+    st.error(f"Error loading CSV: {e}")
+    st.stop()
 
 # -------------------------
 # Top-3 Podium Table
@@ -22,21 +32,19 @@ st.subheader("🏆 Predicted Podium")
 top3 = df_pred.sort_values("PredictedRacePos").head(3).reset_index(drop=True)
 top3["Medal"] = ["🥇","🥈","🥉"]
 
-# Columns to display
+# Display only relevant columns
 top3_display = top3[["Medal","Driver","Constructor"]]
 
-# Display table without index
-st.table(top3_display.style.hide_index())
+# Use st.dataframe to display cleanly without index
+st.dataframe(top3_display, use_container_width=True)
 
 # -------------------------
 # Full Race Table
 # -------------------------
 st.subheader("📋 Full Race Results")
 
-# Columns to show in full table (exclude PredictedRacePos)
+# Columns to display
 full_table = df_pred[["Driver","Constructor","QualRank","QualTime","GapToPole","Grid"]]
 
-# Display table without index and with gradient for readability
-st.dataframe(
-    full_table.style.hide_index().background_gradient(cmap='viridis')
-)
+# Display with gradient for readability
+st.dataframe(full_table.style.background_gradient(cmap='viridis'), use_container_width=True)
